@@ -1,6 +1,12 @@
 {
   "name": "chainy",
   "module": "src/index.ts",
+  "main": "out/index.js",
+  "types": "out/index.d.ts",
+  "dist": {
+    "main": "out/index.js",
+    "types": "out/index.d.ts"
+  },
   "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.15.0",
@@ -15,7 +21,12 @@
   "scripts": {
     "start": "bun src/index.ts",
     "test": "bun test",
-    "lint": "bun eslint"
+    "lint": "bun eslint",
+    "build:clean": "mkdir -p out && rm -rf out/*",
+    "build:types": "tsc --emitDeclarationOnly --project tsconfig.types.json",
+    "build:bun": "bun build ./src/index.ts --target=bun --minify > out/index.js",
+    "build:browser": "bun build ./src/index.ts --target=browser --minify > out/index.js",
+    "build": "bun run build:clean && bun run build:types && bun run build:browser"
   },
   "dependencies": {
     "axios": "^1.7.8",

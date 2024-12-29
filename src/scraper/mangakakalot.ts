@@ -3,7 +3,7 @@ import {Scraper} from './scraper';
 import type {Chains} from '../type/chains';
 
 export class Mangakakalot extends Scraper {
-    protected readonly hostnames = new Set<string>([
+    public readonly hostnames = new Set<string>([
         'mangakakalot.com',
     ]);
 
@@ -96,6 +96,43 @@ export class Mangakakalot extends Scraper {
                     .attribute('title')
                     .cast_date('MMM-dd-yyyy HH:mm')
                     .or_cast_relative_date())
+                .toChainy(),
+        },
+
+        images: chainy()
+            .select('div.container-chapter-reader img')
+            .attribute('src')
+            .toChainy(),
+
+        search: {
+            search_urls: [
+                'https://mangakakalot.com/search/story/{keyword}',
+                'https://manganato.com/search/story/{keyword}',
+            ],
+            format_keyword: chainy<string, string>()
+                .regex(/\s+/, '_')
+                .regex(/[^\w\d_]/, '')
+                .toChainy(),
+
+            root: chainy()
+                .select('div.panel-search-story')
+                .toChainy(),
+            url: chainy()
+                .select('a.item-img.bookmark_check').first()
+                .attribute('href')
+                .toChainy(),
+            title: chainy()
+                .select('a.item-img.bookmark_check').first()
+                .attribute('title')
+                .toChainy(),
+            cover_url: chainy()
+                .select('a.item-img.bookmark_check img').first()
+                .attribute('src')
+                .toChainy(),
+            authors: chainy()
+                .select('span.item-author').first()
+                .attribute('title')
+                .split(' , ')
                 .toChainy(),
         },
     };

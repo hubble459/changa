@@ -1,11 +1,11 @@
 import {chainy} from 'chainy';
-import type {Chapter, Manga} from '../type';
+import type {Chapter, Manga, MangaSearch} from '../type';
 import type {Chains} from '../type/chains';
 import type {CheerioAPI} from 'cheerio';
 import type {MangaWithChapters} from '../type/manga_with_chapters';
 
 export abstract class Scraper {
-    protected abstract readonly hostnames: Set<string>;
+    public abstract readonly hostnames: Set<string>;
 
     protected abstract readonly chains: Chains;
 
@@ -72,5 +72,31 @@ export abstract class Scraper {
         return this.chains.images.run($);
     }
 
-    // public abstract search(): Promise<MangaSearch[]>;
+    public search($: CheerioAPI): MangaSearch[] {
+        const search_chain = this.chains.search;
+
+        if (!search_chain) {
+            throw new Error('No search chain found');
+        }
+
+        const search_results: MangaSearch[] = [];
+
+        const elements = search_chain.root.run($);
+
+        for (const element of elements) {
+            search_results.push({
+                url: search_chain.url.run($, element),
+                title: search_chain.title.run($, element),
+                description: search_chain.description?.run($, element),
+                cover_url: search_chain.cover_url?.run($, element),
+                status: search_chain.status?.run($, element),
+                is_ongoing: search_chain.is_ongoing?.run($, element),
+                authors: search_chain.authors?.run($, element),
+                genres: search_chain.genres?.run($, element),
+                alternative_titles: search_chain.alternative_titles?.run($, element),
+            });
+        }
+
+        return search_results;
+    }
 }

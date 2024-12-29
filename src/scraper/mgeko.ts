@@ -3,7 +3,7 @@ import {Scraper} from './scraper';
 import type {Chains} from '../type/chains';
 
 export class MGeko extends Scraper {
-    protected readonly hostnames = new Set<string>([
+    public readonly hostnames = new Set<string>([
         'mgeko.cc',
     ]);
 
@@ -63,6 +63,7 @@ export class MGeko extends Scraper {
             url: chainy()
                 .select('a').first()
                 .attribute('href')
+                .abs_url()
                 .toChainy(),
             title: chainy()
                 .select('strong.chapter-title').first()
@@ -82,5 +83,9 @@ export class MGeko extends Scraper {
                 .cast_date('MMM. d, yyyy, h:mm aaaa')
                 .toChainy(),
         },
+        images: chainy()
+            .select('#chapter-reader > img')
+            .attribute('src')
+            .toChainy(),
     };
 }

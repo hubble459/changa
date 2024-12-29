@@ -2,6 +2,7 @@ import {describe, expect, test} from 'bun:test';
 import {unlink} from 'node:fs/promises';
 import {Changa} from '../src/scraper';
 import {load} from 'cheerio';
+import {html_axios} from 'chainy';
 
 const urls = await load_urls();
 
@@ -62,7 +63,13 @@ describe('changa', () => {
                 const chapters = await scraper!.chapters($);
                 expect(chapters).toBeArray();
                 expect(chapters).not.toBeArrayOfSize(0);
-            });
+
+                const chapter_one = chapters[0]!;
+                const {data} = await html_axios.get(chapter_one.url);
+                const images = await scraper!.images(data);
+                expect(images).toBeArray();
+                expect(images).not.toBeArrayOfSize(0);
+            }, 60000);
         });
     }
 });

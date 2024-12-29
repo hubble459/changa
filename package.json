@@ -1,5 +1,5 @@
 {
-  "name": "chainy",
+  "name": "changa",
   "module": "src/index.ts",
   "main": "out/index.js",
   "types": "out/index.d.ts",

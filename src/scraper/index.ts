@@ -8,7 +8,7 @@ import {Scraper} from './scraper';
 const scrapers = [new Mangakakalot(), new MGeko()];
 
 export class Changa extends Scraper {
-    protected readonly hostnames = scrapers.reduce((acc, scraper) => acc.union(scraper.hostnames), new Set<string>());
+    public readonly hostnames = scrapers.reduce((acc, scraper) => acc.union(scraper.hostnames), new Set<string>());
 
     protected readonly chains: Chains = {} as any;
 

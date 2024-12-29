@@ -64,6 +64,7 @@ export class Mangakakalot extends Scraper {
                 .first()
                 .text()
                 .regex(/^\w+\s*:\s*/i)
+                .regex(/\s*,\s*/, ' ; ')
                 .split(' ; ')
                 .trim()
                 .toChainy(),

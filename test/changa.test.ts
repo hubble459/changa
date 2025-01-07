@@ -3,10 +3,17 @@ import {unlink} from 'node:fs/promises';
 import {Changa} from '../src/scraper';
 import {load} from 'cheerio';
 import {html_axios} from 'chainy';
+import {Mangakakalot} from '../src/scraper/mangakakalot';
+import * as devalue from 'devalue';
 
-const urls = await load_urls();
+// const urls = await load_urls();
 
 describe('changa', () => {
+    const mkkl = new Mangakakalot().toObject();
+    mkkl.name = 'mangakakalot';
+    console.log(devalue.stringify(mkkl as any));
+
+    return;
     const changa = new Changa();
 
     for (const [url, html] of Object.entries(urls)) {

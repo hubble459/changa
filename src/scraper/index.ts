@@ -5,7 +5,7 @@ import {Mangakakalot} from './mangakakalot';
 import {MGeko} from './mgeko';
 import {Scraper} from './scraper';
 
-const scrapers = [new Mangakakalot(), new MGeko()];
+export const scrapers = [new Mangakakalot(), new MGeko()];
 
 export class Changa extends Scraper {
     public readonly hostnames = scrapers.reduce((acc, scraper) => acc.union(scraper.hostnames), new Set<string>());

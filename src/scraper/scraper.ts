@@ -1,4 +1,4 @@
-import {chainy} from 'chainy';
+import {Chainy, chainy} from 'chainy';
 import type {Chapter, Manga, MangaSearch} from '../type';
 import type {Chains} from '../type/chains';
 import type {CheerioAPI} from 'cheerio';
@@ -11,6 +11,23 @@ export abstract class Scraper {
 
     public get_chains(): Readonly<Chains> {
         return Object.freeze(this.chains);
+    }
+
+    public toObject(): object {
+        function toObjectRecursive(object: object): object {
+            return Object.fromEntries(Object.entries(object).map(([key, value]) => [
+                key,
+                value instanceof Chainy
+                    ? value.toObject()
+                    : typeof value === 'object'
+                        ? toObjectRecursive(value)
+                        : value,
+            ]));
+        }
+        return {
+            hostnames: Array.from(this.hostnames),
+            chains: toObjectRecursive(this.chains),
+        };
     }
 
     public accepts($: CheerioAPI): boolean {
